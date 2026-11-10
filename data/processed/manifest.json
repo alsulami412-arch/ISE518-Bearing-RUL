@@ -1,0 +1,66 @@
+{
+  "dataset": "KAIST ball bearing run-to-failure (Mendeley Data doi:10.17632/5hcdd3tdvb.6, CC BY 4.0)",
+  "created_utc": "2026-11-02T19:46:06+00:00",
+  "n_files": 129,
+  "file_ordering": "timestamp in file name",
+  "n_windows": 10062,
+  "window_seconds": 1.0,
+  "fs_hz": 25600,
+  "envelope_band_hz": [
+    1000,
+    11000
+  ],
+  "bands_hz": {
+    "b1": [
+      10,
+      1000
+    ],
+    "b2": [
+      1000,
+      3000
+    ],
+    "b3": [
+      3000,
+      6000
+    ],
+    "b4": [
+      6000,
+      10000
+    ],
+    "b5": [
+      10000,
+      12000
+    ]
+  },
+  "fault_coefficients": {
+    "ftf": 0.3974025974025974,
+    "bpfo": 3.5766233766233766,
+    "bpfi": 5.423376623376623,
+    "bsf": 2.334111458162091
+  },
+  "excerpt_hours": [
+    0,
+    8,
+    16,
+    32,
+    48,
+    64,
+    80,
+    96,
+    104,
+    112,
+    116,
+    120,
+    122,
+    124,
+    125,
+    126,
+    127,
+    128
+  ],
+  "runtime_seconds": 179.0,
+  "python": "3.12.15",
+  "numpy": "2.5.4",
+  "pandas": "3.1.0",
+  "scipy": "1.18.1"
+}

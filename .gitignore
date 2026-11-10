@@ -1,0 +1,7 @@
+# raw data is never committed (18.5 GB); only the processed tables in data/processed/
+raw_download/
+*.zip
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.DS_Store
