@@ -93,7 +93,7 @@ bearing temperature and ambient temperature (18.5 GB in total).
 
 The raw files are not stored here. `pipeline/build_features.py` downloads them from Mendeley Data, checks their quality
 and aggregates every 1-second window into time-domain, frequency-domain and envelope (bearing-defect) indicators.
-The workflow in `.github/workflows/build-features.yml` ran it on GitHub's servers (about 9 minutes). To rebuild it yourself, paste this into one Google Colab cell:
+The workflow in `.github/workflows/build-features.yml` ran it on GitHub's servers (about 7 minutes). To rebuild it yourself, paste this into one Google Colab cell:
 
 ```
 !git clone https://github.com/alsulami412-arch/ISE518-Bearing-RUL.git
