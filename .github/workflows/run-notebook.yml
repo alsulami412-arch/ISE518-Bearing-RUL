@@ -1,0 +1,69 @@
+# Runs the whole notebook on GitHub's servers (like "Runtime -> Run all" in Colab),
+# saves the executed notebook and the regenerated dashboard back to the repository,
+# and fails the job if any cell raised an error.
+name: Run the notebook
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "ISE518_G8_Bearing_EDA_RUL_V3.ipynb"
+      - ".github/workflows/run-notebook.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: run-notebook
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt nbconvert ipykernel
+
+      - name: Run all cells
+        run: |
+          jupyter nbconvert --to notebook --execute --inplace --allow-errors \
+            --ExecutePreprocessor.timeout=1800 --ExecutePreprocessor.kernel_name=python3 \
+            ISE518_G8_Bearing_EDA_RUL_V3.ipynb
+
+      - name: Check for errors
+        id: check
+        run: |
+          python - <<'EOF' | tee notebook_run_report.txt
+          import json, sys
+          nb = json.load(open("ISE518_G8_Bearing_EDA_RUL_V3.ipynb"))
+          code = [(i, c) for i, c in enumerate(nb["cells"]) if c["cell_type"] == "code"]
+          errors = [(i, o["ename"], o["evalue"]) for i, c in code
+                    for o in c.get("outputs", []) if o.get("output_type") == "error"]
+          ran = sum(1 for _, c in code if c.get("execution_count"))
+          print(f"code cells: {len(code)}, executed: {ran}, with errors: {len(errors)}")
+          for i, n, v in errors:
+              print(f"cell {i}: {n}: {v}")
+          open("errors.flag", "w").write(str(len(errors)))
+          EOF
+          echo '### Notebook run' >> "$GITHUB_STEP_SUMMARY"
+          cat notebook_run_report.txt >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Commit the executed notebook and dashboard
+        run: |
+          cp notebook_run_report.txt data/processed/notebook_run_report.txt
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add ISE518_G8_Bearing_EDA_RUL_V3.ipynb dashboard data/processed/notebook_run_report.txt
+          git commit -m "Run the notebook on GitHub Actions (automated) [skip ci]" || { echo "nothing to commit"; }
+          for i in 1 2 3; do git pull --rebase origin main && git push origin HEAD:main && break; sleep 5; done
+
+      - name: Fail if any cell raised an error
+        run: test "$(cat errors.flag)" = "0"
