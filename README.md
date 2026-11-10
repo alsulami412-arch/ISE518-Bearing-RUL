@@ -96,8 +96,8 @@ and aggregates every 1-second window into time-domain, frequency-domain and enve
 The workflow in `.github/workflows/build-features.yml` ran it on GitHub's servers (about 9 minutes). To rebuild locally:
 
 ```bash
-pip install numpy pandas scipy requests
-python pipeline/build_features.py --download --out data/processed
+!pip install numpy pandas scipy requests
+!python pipeline/build_features.py --download --out data/processed
 ```
 
 ## Running the notebook locally
